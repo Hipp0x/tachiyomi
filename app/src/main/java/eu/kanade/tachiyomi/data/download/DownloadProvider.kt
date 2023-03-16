@@ -138,12 +138,33 @@ class DownloadProvider(
      * @param chapterScanlator scanlator of the chapter to query
      */
     fun getChapterDirName(chapterName: String, chapterScanlator: String?): String {
+        val newChapterName = getNewChapterName(chapterName)
         return DiskUtil.buildValidFilename(
             when {
-                chapterScanlator.isNullOrBlank().not() -> "${chapterScanlator}_$chapterName"
-                else -> chapterName
+                chapterScanlator.isNullOrBlank().not() -> "${chapterScanlator}_$newChapterName"
+                else -> newChapterName
             },
         )
+    }
+
+    /**
+     * Return the new name for the chapter (in case it's only a number or blanck)
+     *
+     * @param chapterName the name of the chapter
+     */
+    private fun getNewChapterName(chapterName: String): String {
+        var newChapterName = chapterName
+        try {
+            val chapterToInt = Integer.parseInt(chapterName)
+            if (chapterToInt.toString() == chapterName) {
+                newChapterName = "${R.string.chapter} $chapterName"
+            }
+        } catch (e: NumberFormatException) {
+            if (chapterName.isBlank()) {
+                newChapterName = "${R.string.chapter}"
+            }
+        }
+        return newChapterName
     }
 
     fun isChapterDirNameChanged(oldChapter: Chapter, newChapter: Chapter): Boolean {
