@@ -148,23 +148,16 @@ class DownloadProvider(
     }
 
     /**
-     * Return the new name for the chapter (in case it's only a number or blanck)
+     * Return the new name for the chapter (in case it's empty or blank)
      *
      * @param chapterName the name of the chapter
      */
     private fun getNewChapterName(chapterName: String): String {
-        var newChapterName = chapterName
-        try {
-            val chapterToInt = Integer.parseInt(chapterName)
-            if (chapterToInt.toString() == chapterName) {
-                newChapterName = "${R.string.chapter} $chapterName"
-            }
-        } catch (e: NumberFormatException) {
-            if (chapterName.isBlank()) {
-                newChapterName = "${R.string.chapter}"
-            }
+        return if (chapterName.isEmpty() || chapterName.isBlank()) {
+            "Chapter"
+        } else {
+            chapterName
         }
-        return newChapterName
     }
 
     fun isChapterDirNameChanged(oldChapter: Chapter, newChapter: Chapter): Boolean {
