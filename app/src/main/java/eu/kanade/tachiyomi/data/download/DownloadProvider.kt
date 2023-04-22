@@ -138,7 +138,7 @@ class DownloadProvider(
      * @param chapterScanlator scanlator of the chapter to query
      */
     fun getChapterDirName(chapterName: String, chapterScanlator: String?): String {
-        val newChapterName = getNewChapterName(chapterName)
+        val newChapterName = sanitizeChapterName(chapterName)
         return DiskUtil.buildValidFilename(
             when {
                 chapterScanlator.isNullOrBlank().not() -> "${chapterScanlator}_$newChapterName"
@@ -152,11 +152,9 @@ class DownloadProvider(
      *
      * @param chapterName the name of the chapter
      */
-    private fun getNewChapterName(chapterName: String): String {
-        return if (chapterName.isEmpty() || chapterName.isBlank()) {
+    private fun sanitizeChapterName(chapterName: String): String {
+        return chapterName.ifBlank {
             "Chapter"
-        } else {
-            chapterName
         }
     }
 
